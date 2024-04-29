@@ -17,7 +17,6 @@ COSMOSDB_DATABASE = os.environ.get("COSMOSDB_DATABASE")
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-
 # Replace these values with your Cosmos DB connection information
 endpoint = COSMOSDB_ENDPOINT
 key = COSMOSDB_CONNECTION_KEY
