@@ -14,7 +14,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "https://worklogs-test-20240428.azurewebsites.net/",
+        target: "http://localhost:7071",
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, 'mock'),
       },

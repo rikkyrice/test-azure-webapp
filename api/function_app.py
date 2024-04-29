@@ -5,9 +5,9 @@ from azure.cosmos.aio import CosmosClient
 from azure.cosmos.partition_key import PartitionKey
 # import asyncio
 import azure.functions as func
-from fastapi import FastAPI, Request, Response
 import logging
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -15,6 +15,7 @@ COSMOSDB_ENDPOINT = os.environ.get("COSMOSDB_ENDPOINT")
 COSMOSDB_CONNECTION_KEY = os.environ.get("COSMOSDB_CONNECTION_KEY")
 COSMOSDB_DATABASE = os.environ.get("COSMOSDB_DATABASE")
 
+app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 # Replace these values with your Cosmos DB connection information
 endpoint = COSMOSDB_ENDPOINT
@@ -25,8 +26,6 @@ partition_key = "/ProjectId"
 
 # Set the total throughput (RU/s) for the database and container
 # database_throughput = 1000
-
-fast_app = FastAPI()
 
 # Singleton CosmosClient instance
 client = CosmosClient(endpoint, credential=key)
@@ -65,27 +64,43 @@ async def get_products():
 #     items.append(item)
 #   return items
 
-@fast_app.get("/api/items")
-async def GetItems(req: Request) -> Response:
+@app.route(route="items")
+async def HTTPExample(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Python HTTP trigger function processed a request.")
 
-    # name = req.params.get("name")
-    # if not name:
-    #     try:
-    #         req_body = req.get_json()
-    #     except ValueError:
-    #         pass
-    #     else:
-    #         name = req_body.get("name")
+    name = req.params.get("name")
+    if not name:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            name = req_body.get("name")
     
     all_products = await get_products()
     print('All Products:', all_products)
 
-    return Response(
-      content=json.dumps(all_products),
+    return func.HttpResponse(
+      body=json.dumps(all_products),
       status_code=200,
       headers={"content-type": "application/json"},
     )
 
-app = func.AsgiFunctionApp(app=fast_app, http_auth_level=func.AuthLevel.ANONYMOUS)
+    # if name:
+    #     return func.HttpResponse(
+    #         f"Hello, {name}. This HTTP triggered function executed successfully."
+    #     )
+    # else:
+    #     return func.HttpResponse(
+    #         "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+    #         status_code=200,
+    #     )
 
+  # queried_products = await query_products('Widget')
+  # print('Queried Products:', queried_products)
+
+# async def main():
+#   all_products = await get_products()
+#   print('All Products:', all_products)
+
+# asyncio.run(main())
