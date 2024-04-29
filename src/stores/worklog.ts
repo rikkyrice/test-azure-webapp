@@ -26,7 +26,7 @@ export const useWorkLogStore = defineStore({
       const viewer_store = useViewerStore();
       try {
         // const response = await axios.get("https://worklogs-test-20240428.azurewebsites.net/api/HTTPExample");
-        const response = await axios.get("/api/HTTPExample");
+        const response = await axios.get("/api/items");
         this.worklogs = response.data;
       } catch (error: any) {
         viewer_store.handleError(error, '参考ドキュメント取得中にエラーが発生しました。');
