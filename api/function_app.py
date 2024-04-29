@@ -65,7 +65,7 @@ async def get_products():
 #     items.append(item)
 #   return items
 
-@fast_app.get("/items")
+@fast_app.get("/api/items")
 async def GetItems(req: Request) -> Response:
     logging.info("Python HTTP trigger function processed a request.")
 

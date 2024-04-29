@@ -29,7 +29,7 @@ export const useWorkLogStore = defineStore({
         const response = await axios.get("/api/items");
         this.worklogs = response.data;
       } catch (error: any) {
-        viewer_store.handleError(error, '参考ドキュメント取得中にエラーが発生しました。');
+        viewer_store.handleError(error, '業務日誌取得中にエラーが発生しました。');
       }
     },
     // async postExample(new_example_doc: ExampleDoc) {
